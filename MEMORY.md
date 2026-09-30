@@ -1,0 +1,2 @@
+- [Painting Service App Project](painting-service-app-project.md) — Project overview and implementation details
+- [Claude Project Summary](claude.md) — Project documentation for Claude

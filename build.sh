@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Building React app..."
+webpack --mode production
+
+echo "Starting server..."
+node server.js
