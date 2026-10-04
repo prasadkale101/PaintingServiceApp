@@ -1,91 +1,73 @@
-# Painting Service Application
+# Painting Service App
 
-A full stack web application for managing painting services built with React, TypeScript, and Express.
+A professional painting service website with appointment scheduling functionality.
 
 ## Features
 
-- Responsive web interface using React and TypeScript
-- RESTful API backend using Express.js
-- Home page with service preview, reviews, and photo gallery
-- Services page with detailed information
-- Appointment scheduling system
-- About page with company information
-- Photo gallery display
+- Professional painting services showcase
+- Customer reviews and testimonials
+- Before/after gallery
+- Online appointment scheduling system
+- Responsive design for all devices
 
-## Project Structure
+## Tech Stack
 
-```
-.
-├── src/                 # React application source code
-│   ├── App.tsx          # Main application component
-│   ├── index.tsx        # Entry point
-│   └── index.css        # Styles
-├── public/              # Static files
-│   └── index.html       # HTML template
-├── server.js            # Express server
-├── webpack.config.js    # Webpack configuration
-├── tsconfig.json        # TypeScript configuration
-├── package.json         # Dependencies and scripts
-└── README.md            # This file
-```
+- **Frontend**: React, TypeScript, CSS
+- **Backend**: Node.js, Express.js
+- **Database**: PostgreSQL (with fallback to hardcoded data)
+- **Build Tools**: Webpack, TypeScript
 
-## Getting Started
+## Database Setup
 
-### Prerequisites
+The application supports both database and fallback modes:
 
-- Node.js (v14 or higher)
-- npm (v6 or higher)
+1. **With Database**:
+   - PostgreSQL required
+   - Tables will be created automatically if they don't exist
+   - Environment variables for database connection:
+     - `DB_USER` (default: postgres)
+     - `DB_HOST` (default: localhost)
+     - `DB_NAME` (default: painting-service-db)
+     - `DB_PASSWORD` (default: tEst123!)
+     - `DB_PORT` (default: 5432)
 
-### Installation
-
-1. Clone the repository
-2. Install dependencies:
-   ```
-   npm install
-   ```
-
-### Development
-
-To run in development mode with hot reloading:
-
-```
-npm run dev
-```
-
-This will start both the React development server and Express backend server.
-
-### Production Build
-
-To build for production:
-
-```
-npm run build
-```
-
-Then start the server:
-```
-npm start
-```
+2. **Without Database**:
+   - Fallback to hardcoded data will be used
+   - Application continues to function normally
 
 ## API Endpoints
 
-- `GET /api/services` - Get list of painting services
+- `GET /api/services` - Get all painting services
 - `GET /api/reviews` - Get customer reviews
-- `GET /api/gallery` - Get photo gallery items
+- `GET /api/gallery` - Get gallery images
+- `POST /api/schedule` - Schedule an appointment
+- `GET /health` - Health check endpoint
 
-## Technologies Used
+## Running the Application
 
-- **Frontend**: React, TypeScript, React Router, CSS
-- **Backend**: Express.js, Node.js
-- **Build Tools**: Webpack, TypeScript Compiler
-- **Development**: concurrently, nodemon, webpack-dev-server
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Contributing
+2. Start the development server:
+   ```bash
+   npm start
+   ```
 
-This is a basic implementation of the painting service application. The project can be extended with additional features like:
+3. Build for production:
+   ```bash
+   npm run build
+   ```
 
-- User authentication and admin panel
-- Database integration (MongoDB/PostgreSQL)
-- Image upload functionality
-- Appointment management system
-- Email notifications
+## Environment Variables
+
+Create a `.env` file in the root directory with:
+```
+SERVER_PORT=3000
+DB_USER=postgres
+DB_HOST=localhost
+DB_NAME=painting-service-db
+DB_PASSWORD=tEst123!
+DB_PORT=5432
+```
