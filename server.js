@@ -4,6 +4,45 @@ const path = require('path');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
+function validateScheduleInput(body) {
+  const errors = [];
+  const requiredFields = [
+    'name',
+    'email',
+    'phone',
+    'serviceType',
+    'date',
+    'time',
+    'location',
+  ];
+  requiredFields.forEach(field => {
+    if (!body[field]) {
+      errors.push(`${field} is required`);
+    }
+  });
+
+  // Email validation
+  if (body.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
+    errors.push('Invalid email format');
+  }
+
+  // Phone validation (optional – uncomment if needed)
+  if (body.phone && !/^[+]?\d{10,15}$/.test(body.phone)) {
+    errors.push('Invalid phone number format');
+  }
+
+  // Date validation
+  if (body.date && isNaN(Date.parse(body.date))) {
+    errors.push('Invalid date format');
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+}
+
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -12,56 +51,52 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'build')));
 
-// Mock data for services and reviews
-const mockServices = [
-  {
-    id: 1,
-    name: "Interior Painting",
-    description: "Professional interior painting services for homes and businesses",
-    price: "$2,500 - $8,000"
-  },
-  {
-    id: 2,
-    name: "Exterior Painting",
-    description: "Complete exterior house painting including siding, trim, and doors",
-    price: "$3,000 - $12,000"
-  },
-  {
-    id: 3,
-    name: "Ceiling Painting",
-    description: "Specialized ceiling painting services for homes and commercial spaces",
-    price: "$1,500 - $4,000"
-  },
-  {
-    id: 4,
-    name: "Trim and Doors",
-    description: "Painting of trim, doors, and built-in cabinetry",
-    price: "$800 - $2,500"
-  },
-  {
-    id: 5,
-    name: "Wall Repairs",
-    description: "Painting with repair services for damaged walls",
-    price: "$1,000 - $3,500"
-  }
-];
-
-
 // API Routes
-app.get('/api/services', (req, res) => {
-  console.log('🔧 API: Fetching services');
-  setTimeout(() => {
-    res.json(mockServices);
-  }, 100); // Simulate network delay
-});
+	app.get('/api/services', async (req, res) => {
+	  try {
+	    const services = await prisma.service.findMany();
+	    res.json(services);
+	  } catch (err) {
+	    console.error('Error fetching services:', err);
+	    res.status(500).json({ error: 'Failed to fetch services' });
+	  }
+	});
+	app.get('/api/reviews', async (req, res) => {
+	  try {
+	    const reviews = await prisma.review.findMany();
+	    res.json(reviews);
+	  } catch (err) {
+	    console.error('Error fetching reviews:', err);
+	    res.status(500).json({ error: 'Failed to fetch reviews' });
+	  }
+	});
 
-app.get('/api/reviews', async (req, res) => {
+// POST /api/schedule
+app.post('/api/schedule', async (req, res) => {
+  console.log('Schedule request:', req.body);
+  const { body } = req;
+  const { valid, errors } = validateScheduleInput(body);
+  if (!valid) {
+    return res.status(400).json({ error: errors.join('; ') });
+  }
+
   try {
-    const reviews = await prisma.review.findMany();
-    res.json(reviews);
+    const newSchedule = await prisma.schedule.create({
+      data: {
+        name: body.name,
+        email: body.email,
+        phone: body.phone,
+        service: body.serviceType,
+        preferred_date: new Date(body.date),
+        preferred_time: body.time,
+        location: body.location,
+        additional_info: body.description || null,
+      },
+    });
+    res.status(201).json(newSchedule);
   } catch (err) {
-    console.error('Error fetching reviews:', err);
-    res.status(500).json({ error: 'Failed to fetch reviews' });
+    console.error('Schedule error:', err);
+    res.status(500).json({ error: 'Failed to schedule service' });
   }
 });
 
@@ -69,6 +104,7 @@ app.get('/api/reviews', async (req, res) => {
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
+
 
 app.listen(PORT, () => {
   console.log(`🚀 Backend server is running on http://localhost:${PORT}`);
