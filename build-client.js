@@ -12,11 +12,12 @@ if (!fs.existsSync(buildDir)) {
 
 // Copy static files (index.html and assets) to build directory
 const sourceFiles = [
-  'src/index.html',
+  'public/index.html',
   'public/images/logo.jpg',
   'public/images/painting-1.jpg',
   'public/images/painting-2.jpg',
-  'public/images/painting-3.jpg'
+  'public/images/painting-3.jpg',
+  'src/index.css'
 ];
 
 sourceFiles.forEach(file => {
@@ -49,6 +50,13 @@ if (!fs.existsSync(indexPath)) {
 
   fs.writeFileSync(indexPath, htmlContent);
   console.log('✅ Created basic index.html');
+}
+
+// Check if build/index.js exists - if not, we need to bundle the React app
+const jsFilePath = path.join(buildDir, 'index.js');
+if (!fs.existsSync(jsFilePath)) {
+  console.log('⚠️  React bundle (index.js) not found in build directory.');
+  console.log('   You may need to run webpack to build the React application.');
 }
 
 console.log('✅ Client build completed successfully!');

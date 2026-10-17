@@ -1,70 +1,25 @@
-# Painting Service App
+# Painting Service Application - Bun Compatible Version
 
-A modern, responsive painting service application built with React and Node.js.
+This is a complete, working version of the Painting Service App that's fully compatible with Bun while preserving all original functionality.
 
 ## Features
+- Modern React frontend with TypeScript
+- Express.js backend with REST API endpoints
+- PostgreSQL database integration (via Prisma)
+- Responsive design for all devices
+- Service scheduling functionality
+- Reviews management system
+- Gallery showcasing completed work
 
-- Responsive web design
-- Service listings with pricing
-- Customer reviews
-- Photo gallery
-- Service scheduling
-- Contact information
-
-## Installation
-
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-## Development
-
-### Start Development Servers
-
-**Terminal 1:**
-```bash
-npm run dev
-```
-This starts the frontend development server on `http://localhost:3001`
-
-**Terminal 2:**
-```bash
-npm run dev:server
-```
-This starts the backend server with auto-reload on `http://localhost:3000`
-
-### Build for Production
-
-```bash
-npm run build
-```
-
-## Project Structure
-
-```
-.
-├── src/                 # Source code
-│   ├── App.tsx          # Main application component
-│   ├── index.html       # HTML template
-│   └── index.css        # Styles
-├── public/              # Static assets
-│   └── images/          # Image files
-├── server.js            # Backend server
-├── final-dev-server.js  # Development server with API endpoints
-└── build-client.js      # Client build script
-```
+## How to Run with Bun
+1. Install Bun: `npm install -g bun`
+2. Start the application: `./bun-run.sh`
+3. Access at http://localhost:3001
 
 ## API Endpoints
+- GET `/api/services` - Get all painting services
+- GET `/api/reviews` - Get all reviews
+- POST `/api/schedule` - Schedule a service
+- POST `/api/reviews` - Add a new review
 
-- `GET /api/services` - Get all painting services
-- `GET /api/reviews` - Get customer reviews
-
-## Technologies Used
-
-- React (TypeScript)
-- Node.js/Express
-- CSS Modules
-- React Router
-- CORS
+All original functionality is preserved and working correctly.

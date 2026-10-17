@@ -4,7 +4,6 @@ const path = require('path');
 const fs = require('fs');
 
 
-
 function validateScheduleInput(body) {
   const errors = [];
   const requiredFields = [
@@ -46,9 +45,7 @@ function validateScheduleInput(body) {
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
-
 const express = require('express');
-
 
 console.log('🚀 Starting Painting Service App development environment...');
 
@@ -131,7 +128,6 @@ app.use(express.json());
 // Serve static files from the build directory
 app.use(express.static(buildDir));
 
-
 const mockReviews = [
   {
     id: 1,
@@ -211,6 +207,23 @@ app.post('/api/schedule', async (req, res) => {
   } catch (err) {
     console.error('Schedule error:', err);
     res.status(500).json({ error: 'Failed to schedule service' });
+  }
+});
+
+// POST /api/reviews - new route for adding reviews
+app.post('/api/reviews', async (req, res) => {
+  const { name, rating, comment } = req.body;
+  if (!name || !rating || !comment) {
+    return res.status(400).json({ error: 'Name, rating, and comment are required' });
+  }
+  try {
+    const newReview = await prisma.review.create({
+      data: { name, rating, comment },
+    });
+    res.status(201).json(newReview);
+  } catch (err) {
+    console.error('Error creating review:', err);
+    res.status(500).json({ error: 'Failed to create review' });
   }
 });
 

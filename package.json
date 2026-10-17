@@ -11,7 +11,9 @@
     "build:server": "tsc -p .",
     "postinstall": "prisma skills sync || exit 0",
     "setup-db": "node database-setup.js",
-    "stop": "echo 'Use Ctrl+C in the terminal to stop the servers'"
+    "stop": "echo 'Use Ctrl+C in the terminal to stop the servers'",
+    "bun:build": "bun run bun-build.js",
+    "bun:dev": "bun run server-bun.js"
   },
   "dependencies": {
     "@prisma/client": "^5.12.0",

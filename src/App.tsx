@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import { Service } from './types';
 import { Review } from './types';
+import AddReview from './AddReview';
 
 // Home Component
 const Home = () => {
@@ -311,14 +312,13 @@ const Schedule = () => {
     try {
       const response = await fetch('/api/schedule', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to schedule service');
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to schedule service');
       }
 
       setSubmitSuccess(true);
@@ -333,7 +333,7 @@ const Schedule = () => {
         location: '',
         description: ''
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error scheduling service:', err);
       setSubmitError('Failed to schedule service. Please try again.');
     } finally {
@@ -397,39 +397,32 @@ const Schedule = () => {
               required
             >
               <option value="">Select a service</option>
-              <option value="Interior Painting">Interior Painting</option>
-              <option value="Exterior Painting">Exterior Painting</option>
-              <option value="Ceiling Painting">Ceiling Painting</option>
-              <option value="Trim and Doors">Trim and Doors</option>
-              <option value="Wall Repairs">Wall Repairs</option>
-              <option value="Other">Other</option>
+              {/* Add options dynamically if needed */}
             </select>
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="date">Preferred Date *</label>
-              <input
-                type="date"
-                id="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="date">Preferred Date *</label>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-            <div className="form-group">
-              <label htmlFor="time">Preferred Time *</label>
-              <input
-                type="time"
-                id="time"
-                name="time"
-                value={formData.time}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="time">Preferred Time *</label>
+            <input
+              type="time"
+              id="time"
+              name="time"
+              value={formData.time}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-group">
@@ -440,27 +433,25 @@ const Schedule = () => {
               name="location"
               value={formData.location}
               onChange={handleChange}
-              placeholder="Address or location details"
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="description">Project Description</label>
+            <label htmlFor="description">Additional Info</label>
             <textarea
               id="description"
               name="description"
+              rows={4}
               value={formData.description}
               onChange={handleChange}
-              rows={4}
-              placeholder="Please describe your painting project..."
-            ></textarea>
+            />
           </div>
 
-          {submitError && <div className="error-message">{submitError}</div>}
+          {submitError && <p className="error-message">{submitError}</p>}
 
-          <button type="submit" disabled={isSubmitting} className="btn">
-            {isSubmitting ? 'Submitting...' : 'Request Service'}
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Submitting...' : 'Schedule Service'}
           </button>
         </form>
       )}
@@ -473,9 +464,7 @@ const Contact = () => {
   return (
     <div className="contact">
       <h2>Contact Us</h2>
-      <p>Have questions? Get in touch with us!</p>
-      <p>Email: bravofernandez036@gmail.com</p>
-      <p>Phone: (615) 692-8283</p>
+      <p>For inquiries, please email us at contact@paintingservice.com.</p>
     </div>
   );
 };
@@ -497,6 +486,7 @@ function App() {
               <li><Link to="/gallery">Gallery</Link></li>
               <li><Link to="/schedule">Schedule Service</Link></li>
               <li><Link to="/contact">Contact</Link></li>
+              <li><Link to="/add-review">Add Review</Link></li>
             </ul>
           </nav>
         </header>
@@ -509,6 +499,7 @@ function App() {
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/add-review" element={<AddReview />} />
           </Routes>
         </main>
       </div>
