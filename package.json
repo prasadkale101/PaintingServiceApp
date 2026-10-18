@@ -7,7 +7,7 @@
     "start": "node server.js",
     "dev": "node final-dev-server.js",
     "dev:server": "nodemon server.js",
-    "build": "node build-client.js",
+    "build": "bun:build",
     "build:server": "tsc -p .",
     "postinstall": "prisma skills sync || exit 0",
     "setup-db": "node database-setup.js",
