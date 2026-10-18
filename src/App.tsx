@@ -4,6 +4,7 @@ import './App.css';
 import { Service } from './types';
 import { Review } from './types';
 import AddReview from './AddReview';
+import AdminSection from './AdminSection';
 
 // Home Component
 const Home = () => {
@@ -487,6 +488,7 @@ function App() {
               <li><Link to="/schedule">Schedule Service</Link></li>
               <li><Link to="/contact">Contact</Link></li>
               <li><Link to="/add-review">Add Review</Link></li>
+              <li><Link to="/admin-section">Admin</Link></li>
             </ul>
           </nav>
         </header>
@@ -500,6 +502,7 @@ function App() {
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/add-review" element={<AddReview />} />
+            <Route path="/admin-section" element={<AdminSection />} />
           </Routes>
         </main>
       </div>

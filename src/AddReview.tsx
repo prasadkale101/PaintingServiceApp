@@ -9,11 +9,16 @@ const AddReview: React.FC = () => {
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [isHuman, setIsHuman] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || rating === 0 || !comment) {
       setError('Please fill in all fields and select a rating.');
+      return;
+    }
+    if (!isHuman) {
+      setError('Please confirm you are not a robot.');
       return;
     }
 
@@ -72,9 +77,21 @@ const AddReview: React.FC = () => {
           />
         </div>
 
+        <div className="form-group">
+          <label htmlFor="human-check" style={{ display: 'flex', alignItems: 'center' }}>
+            <input
+              type="checkbox"
+              id="human-check"
+              checked={isHuman}
+              onChange={(e) => setIsHuman(e.target.checked)}
+            />
+            <span style={{ marginLeft: '0.5rem' }}>I am not a robot</span>
+          </label>
+        </div>
+
         {error && <p className="error-message">{error}</p>}
 
-        <button type="submit" disabled={submitting}>
+        <button type="submit" disabled={submitting} className="btn-submit">
           {submitting ? 'Submitting...' : 'Save Review'}
         </button>
       </form>
