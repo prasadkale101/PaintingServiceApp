@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
 import { Service } from './types';
 import { Review } from './types';
 import AddReview from './AddReview';
 import AdminSection from './AdminSection';
+import Login from './Login';
 
 // Home Component
 const Home = () => {
@@ -470,6 +471,55 @@ const Contact = () => {
   );
 };
 
+// Protected Route Component
+const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const auth = localStorage.getItem('isAdminAuthenticated');
+    if (auth === 'true') {
+      setIsAuthenticated(true);
+    } else {
+      // Redirect to login if not authenticated
+      navigate('/login', { state: { from: { pathname: '/admin-section' } } });
+    }
+  }, [navigate]);
+
+  if (isAuthenticated) {
+    return <>{children}</>;
+  }
+
+  // Return null while checking authentication
+  return null;
+};
+
+// Public Route Component (for login page)
+const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is already authenticated
+    const auth = localStorage.getItem('isAdminAuthenticated');
+    if (auth === 'true') {
+      // If already authenticated, redirect to admin section
+      navigate('/admin-section');
+    } else {
+      // If not authenticated, allow access to login page
+      setIsCheckingAuth(false);
+    }
+  }, [navigate]);
+
+  if (isCheckingAuth) {
+    // Return null while checking authentication
+    return null;
+  }
+
+  return <>{children}</>;
+};
+
 function App() {
   return (
     <Router>
@@ -502,7 +552,16 @@ function App() {
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/add-review" element={<AddReview />} />
-            <Route path="/admin-section" element={<AdminSection />} />
+            <Route path="/login" element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            } />
+            <Route path="/admin-section" element={
+              <ProtectedRoute>
+                <AdminSection />
+              </ProtectedRoute>
+            } />
           </Routes>
         </main>
       </div>
