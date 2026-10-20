@@ -20,6 +20,10 @@ The Admin section is protected with a static username and password:
 
 When accessing the Admin section, users will be redirected to a login page where they must enter these credentials. After successful authentication, they will be granted access to the Admin section. Users can logout at any time using the logout button in the Admin section.
 
+## Admin Functionality
+
+The Admin section now displays all schedule requests in a tabular format. This data is fetched from the schedule table in the database.
+
 ## How to Run
 
 1. Install dependencies: `npm install`

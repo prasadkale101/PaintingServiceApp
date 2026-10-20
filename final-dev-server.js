@@ -196,6 +196,28 @@ app.get('/api/reviews', async (req, res) => {
   }
 });
 
+// GET /api/schedule - fetch all schedule requests
+app.get('/api/schedule', async (req, res) => {
+  try {
+    console.log('Fetching schedules from database...');
+
+    // Test database connection
+    await prisma.$connect();
+    console.log('Database connection successful');
+
+    const schedules = await prisma.schedule.findMany({
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
+    console.log('Successfully fetched schedules:', schedules.length);
+    res.json(schedules);
+  } catch (err) {
+    console.error('Error fetching schedules:', err);
+    res.status(500).json({ error: 'Failed to fetch schedules', details: err.message });
+  }
+});
+
 app.post('/api/schedule', async (req, res) => {
   console.log('Schedule request:', req.body);
   const { body } = req;
