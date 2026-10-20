@@ -64,6 +64,17 @@ async function setupDatabase() {
     `);
     console.log('✅ Schedules table created/verified');
 
+    // Create estimates table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS estimates (
+        id SERIAL PRIMARY KEY,
+        schedule_id INTEGER REFERENCES schedules(id) ON DELETE CASCADE,
+        amount VARCHAR(100) NOT NULL,
+        description TEXT
+      )
+    `);
+    console.log('✅ Estimates table created/verified');
+
     // Insert sample data into services
     await client.query(`
       INSERT INTO services (name, description, price) VALUES
@@ -94,6 +105,14 @@ async function setupDatabase() {
       ON CONFLICT DO NOTHING
     `);
     console.log('✅ Sample data inserted into gallery items table');
+
+    // Insert sample data into estimates
+    await client.query(`
+      INSERT INTO estimates (schedule_id, amount, description) VALUES
+        (1, '$250', 'Interior painting for living room and dining area')
+      ON CONFLICT DO NOTHING
+    `);
+    console.log('✅ Sample data inserted into estimates table');
 
     console.log('\n🎉 Database setup completed successfully!');
     console.log('You can now use the application with database integration.');

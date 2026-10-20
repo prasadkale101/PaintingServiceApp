@@ -118,6 +118,41 @@ app.post('/api/reviews', async (req, res) => {
   }
 });
 
+// POST /api/estimates - new route for adding estimates
+app.post('/api/estimates', async (req, res) => {
+  const { schedule_id, amount, description } = req.body;
+  if (!schedule_id || !amount) {
+    return res.status(400).json({ error: 'schedule_id and amount are required' });
+  }
+  try {
+    const newEstimate = await prisma.estimate.create({
+      data: {
+        schedule_id,
+        amount,
+        description: description || null
+      },
+    });
+    res.status(201).json(newEstimate);
+  } catch (err) {
+    console.error('Error creating estimate:', err);
+    res.status(500).json({ error: 'Failed to create estimate' });
+  }
+});
+
+// GET /api/estimates/:scheduleId - get estimates for a specific schedule
+app.get('/api/estimates/:scheduleId', async (req, res) => {
+  const { scheduleId } = req.params;
+  try {
+    const estimates = await prisma.estimate.findMany({
+      where: { schedule_id: parseInt(scheduleId) }
+    });
+    res.json(estimates);
+  } catch (err) {
+    console.error('Error fetching estimates:', err);
+    res.status(500).json({ error: 'Failed to fetch estimates' });
+  }
+});
+
 // Serve the React app for all other routes - this should be last
 app.get('*', (req, res) => {
   console.log(`Serving index.html for route: ${req.path}`);

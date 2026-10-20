@@ -172,6 +172,20 @@ app.get('/api/services', async (req, res) => {
   }
 });
 
+// GET /api/estimates/:scheduleId - get estimates for a specific schedule
+app.get('/api/estimates/:scheduleId', async (req, res) => {
+  const { scheduleId } = req.params;
+  try {
+    const estimates = await prisma.estimate.findMany({
+      where: { schedule_id: parseInt(scheduleId) }
+    });
+    res.json(estimates);
+  } catch (err) {
+    console.error('Error fetching estimates:', err);
+    res.status(500).json({ error: 'Failed to fetch estimates' });
+  }
+});
+
 app.get('/api/reviews', async (req, res) => {
   try {
     const reviews = await prisma.review.findMany();

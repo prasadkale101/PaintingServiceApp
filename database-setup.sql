@@ -33,6 +33,14 @@ CREATE TABLE IF NOT EXISTS schedules (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Create estimates table
+CREATE TABLE IF NOT EXISTS estimates (
+    id SERIAL PRIMARY KEY,
+    schedule_id INTEGER REFERENCES schedules(id) ON DELETE CASCADE,
+    amount VARCHAR(100) NOT NULL,
+    description TEXT
+);
+
 -- Insert sample data for services table (if empty)
 INSERT INTO services (name, description, price) VALUES
 ('Interior Painting', 'Transform your interior spaces with our professional painting services.', '$150 - $300 per room'),
@@ -53,4 +61,10 @@ INSERT INTO gallery_items (url, title) VALUES
 ('/images/painting-1.jpg', 'Living Room Transformation'),
 ('/images/painting-2.jpg', 'Kitchen Renovation'),
 ('/images/painting-3.jpg', 'Exterior House Painting')
+ON CONFLICT (id) DO NOTHING;
+
+-- Insert sample data for estimates table (if empty)
+INSERT INTO estimates (schedule_id, amount, description) VALUES
+(1, '$250', 'Interior painting for living room and dining area'),
+(2, '$400', 'Exterior painting for front porch and deck')
 ON CONFLICT (id) DO NOTHING;
