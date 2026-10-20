@@ -57,7 +57,7 @@ async function setupDatabase() {
         email VARCHAR(255) NOT NULL,
         phone VARCHAR(20),
         service VARCHAR(100) NOT NULL,
-        preferred_date DATE NOT NULL,
+        preferred_date TIMESTAMP NOT NULL,
         additional_info TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
