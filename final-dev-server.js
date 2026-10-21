@@ -172,17 +172,21 @@ app.get('/api/services', async (req, res) => {
   }
 });
 
-// GET /api/estimates/:scheduleId - get estimates for a specific schedule
+// GET /api/estimates/:scheduleId - get estimate for a specific schedule
 app.get('/api/estimates/:scheduleId', async (req, res) => {
   const { scheduleId } = req.params;
   try {
-    const estimates = await prisma.estimate.findMany({
+    const estimate = await prisma.estimate.findFirst({
       where: { schedule_id: parseInt(scheduleId) }
     });
-    res.json(estimates);
+    if (!estimate) {
+      res.status(404).json({ error: 'Estimate not found' });
+      return;
+    }
+    res.json(estimate);
   } catch (err) {
-    console.error('Error fetching estimates:', err);
-    res.status(500).json({ error: 'Failed to fetch estimates' });
+    console.error('Error fetching estimate:', err);
+    res.status(500).json({ error: 'Failed to fetch estimate' });
   }
 });
 
@@ -246,6 +250,26 @@ app.post('/api/schedule', async (req, res) => {
   }
 });
 
+// GET /api/schedules/:id - fetch a single schedule by ID
+app.get('/api/schedules/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const schedule = await prisma.schedule.findUnique({
+      where: { id: parseInt(id) }
+    });
+
+    if (!schedule) {
+      res.status(404).json({ error: 'Schedule not found' });
+      return;
+    }
+
+    res.json(schedule);
+  } catch (err) {
+    console.error('Error fetching schedule:', err);
+    res.status(500).json({ error: 'Failed to fetch schedule' });
+  }
+});
+
 // POST /api/reviews - new route for adding reviews
 app.post('/api/reviews', async (req, res) => {
   const { name, rating, comment } = req.body;
@@ -260,6 +284,51 @@ app.post('/api/reviews', async (req, res) => {
   } catch (err) {
     console.error('Error creating review:', err);
     res.status(500).json({ error: 'Failed to create review' });
+  }
+});
+
+// POST /api/estimates - new route for adding estimates
+app.post('/api/estimates', async (req, res) => {
+  const { scheduleId, estimateAmount, briefDescription } = req.body;
+  if (!scheduleId || !estimateAmount) {
+    return res.status(400).json({ error: 'scheduleId and estimateAmount are required' });
+  }
+  try {
+    const newEstimate = await prisma.estimate.create({
+      data: {
+        schedule_id: scheduleId,
+        estimateAmount: String(estimateAmount),
+        briefDescription: briefDescription || null
+      },
+    });
+    res.status(201).json(newEstimate);
+  } catch (err) {
+    console.error('Error creating estimate:', err);
+    res.status(500).json({ error: 'Failed to create estimate' });
+  }
+});
+
+// PUT /api/estimates/:scheduleId - update estimate for a specific schedule
+app.put('/api/estimates/:scheduleId', async (req, res) => {
+  const { scheduleId } = req.params;
+  const { estimateAmount, briefDescription } = req.body;
+
+  if (!estimateAmount) {
+    return res.status(400).json({ error: 'estimateAmount is required' });
+  }
+
+  try {
+    const updatedEstimate = await prisma.estimate.update({
+      where: { schedule_id: parseInt(scheduleId) },
+      data: {
+        estimateAmount,
+        briefDescription: briefDescription || null
+      }
+    });
+    res.json(updatedEstimate);
+  } catch (err) {
+    console.error('Error updating estimate:', err);
+    res.status(500).json({ error: 'Failed to update estimate' });
   }
 });
 

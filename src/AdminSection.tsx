@@ -98,7 +98,7 @@ const AdminSection: React.FC = () => {
           <table className="schedule-table">
             <thead>
               <tr>
-                <th>Name</th>
+                <th>Name12</th>
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Service</th>
@@ -111,7 +111,7 @@ const AdminSection: React.FC = () => {
             <tbody>
               {schedules.map((schedule) => (
                 <tr key={schedule.id}>
-                  <td>{schedule.name}</td>
+                  <td><a href={`/job-estimate/${schedule.id}`} className="schedule-name-link">{schedule.name}</a></td>
                   <td>{schedule.email}</td>
                   <td>{schedule.phone}</td>
                   <td>{schedule.service}</td>

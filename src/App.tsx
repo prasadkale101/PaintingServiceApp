@@ -6,6 +6,7 @@ import { Review } from './types';
 import AddReview from './AddReview';
 import AdminSection from './AdminSection';
 import Login from './Login';
+import JobEstimate from './JobEstimate';
 
 // Home Component
 const Home = () => {
@@ -560,6 +561,11 @@ function App() {
             <Route path="/admin-section" element={
               <ProtectedRoute>
                 <AdminSection />
+              </ProtectedRoute>
+            } />
+            <Route path="/job-estimate/:scheduleId" element={
+              <ProtectedRoute>
+                <JobEstimate />
               </ProtectedRoute>
             } />
           </Routes>
